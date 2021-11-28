@@ -1,0 +1,14 @@
+CREATE TABLE `minecraft_player_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `playername` varchar(45) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `status` enum('ONLINE','OFFLINE') CHARACTER SET utf8mb4 DEFAULT 'OFFLINE',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `pummel_leaderboards` (
+  `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user` longtext DEFAULT NULL,
+  `score` int(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
