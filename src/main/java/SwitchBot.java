@@ -1,6 +1,7 @@
 import com.github.stackovernorth.jda.commandhandler.api.command.CommandBuilder;
 import com.github.stackovernorth.jda.commandhandler.api.handler.CommandHandler;
 import com.github.stackovernorth.jda.commandhandler.api.handler.CommandHandlerBuilder;
+import commands.general.PummelCommand;
 import commands.minecraft.OnlineCommand;
 import commands.minecraft.RestartCommand;
 import commands.minecraft.ShutdownCommand;
@@ -50,6 +51,12 @@ public class SwitchBot {
                 .allowBotReply(false)
                 .addAllowedChannel(793278072064835603L)
                 .addPermission(Permission.ADMINISTRATOR)
+                .build());
+
+        commandHandler.addCommand(new CommandBuilder("pummel",
+                new PummelCommand())
+                .setDescription("View Pummel Leaderboards")
+                .allowBotReply(false)
                 .build());
     }
 }

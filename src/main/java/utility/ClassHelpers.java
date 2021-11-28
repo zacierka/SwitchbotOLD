@@ -6,6 +6,9 @@ import java.util.Properties;
 
 public final class ClassHelpers {
 
+    public static final String CHECKMARK_EMOTE = "U+2705"; // CHECK
+    public static final String CROSSMARK_EMOTE = "U+274C"; // X MARK
+
     public static String getProperty(String property)
     {
         Properties config = getPropertiesFile();
