@@ -88,14 +88,14 @@ public final class DatabaseHelper {
         return players;
     }
 
-    public static HashMap<String, String> getPummelLeaderboards() throws SQLException {
+    public static HashMap<String, Integer> getPummelLeaderboards() throws SQLException {
         ResultSet rs = executeQuery("SELECT `user`, `score` FROM pummel_leaderboards ORDER BY `score` DESC;");
-        HashMap<String, String> scoreboard = new HashMap<>();
+        HashMap<String, Integer> scoreboard = new HashMap<>();
         if (rs != null) {
             while(rs.next())
             {
                 try {
-                    scoreboard.put(rs.getString("user"), String.valueOf(rs.getInt("score")));;
+                    scoreboard.put(rs.getString("user"), rs.getInt("score"));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -108,5 +108,14 @@ public final class DatabaseHelper {
         return scoreboard;
     }
 
+    public static void updatePummelLeaderboards(String winner) throws SQLException {
+        Connection conn = null;
+        conn = connect();
 
+        String query = "UPDATE switchbot.pummel_leaderboards SET score = score + 1 WHERE `user` like ?;";
+        PreparedStatement preparedStmt = conn.prepareStatement(query);
+        preparedStmt.setString(1, winner);
+
+        preparedStmt.executeUpdate();
+    }
 }

@@ -2,7 +2,8 @@ import utility.DatabaseHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DatabaseTest {
 
@@ -11,15 +12,21 @@ public class DatabaseTest {
 //        {
 //            System.out.println(p);
 //        }
+        
+        Map<String, Integer> sortedlist = DatabaseHelper.getPummelLeaderboards()
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer> comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
 
-        for(Map.Entry<String, String> entry : DatabaseHelper.getPummelLeaderboards().entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-
-            System.out.println(key + " " + value);
-            // do what you have to do here
-            // In your case, another loop.
+        for (Map.Entry<String, Integer> en : sortedlist.entrySet()) {
+            System.out.println("Key = " + en.getKey() +
+                    ", Value = " + en.getValue());
         }
     }
 }
