@@ -5,24 +5,27 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utility.ClassHelpers;
 import utility.DatabaseHelper;
 
-import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PummelCommand implements CommandListener {
-
+    private final Logger pummelLogger = LoggerFactory.getLogger(PummelCommand.class);
     @Override
     public void onCommand(Member member, TextChannel textChannel, Message message, String[] strings) {
         if(strings.length != 0)
         {
             if(member.isOwner()) {
                 String winner = strings[1];
-                if (strings[0].equals("winner")) {
+                if (strings[0].toLowerCase(Locale.ROOT).equals("winner")) {
                     try {
                         DatabaseHelper.updatePummelLeaderboards(winner);
                         message.addReaction("U+1F3C6").queue(); //Trophy Emote
@@ -47,7 +50,7 @@ public class PummelCommand implements CommandListener {
                             LinkedHashMap::new
                     ));
         } catch (SQLException e) {
-            e.printStackTrace();
+            pummelLogger.warn(e.getMessage());
         }
 
         if (sortedlist != null) {

@@ -17,10 +17,9 @@ import java.awt.*;
 import java.util.Objects;
 
 public class ShutdownCommand extends EventListener implements CommandListener {
-
-    private final EventPublisher eventPublisher;
     private JDA jda = null;
-    private String author;
+    private final EventPublisher eventPublisher;
+    private String msgID = "";
 
     public ShutdownCommand(JDA jda) {
         this.jda = jda;
@@ -30,30 +29,36 @@ public class ShutdownCommand extends EventListener implements CommandListener {
 
     @Override
     public void onCommand(Member member, TextChannel textChannel, Message message, String[] strings) {
-        this.author = member.getEffectiveName();
-        eventPublisher.sendMsg(new EventInformation(TopicConstants.SHUTDOWNREQUEST, "request"));
+        eventPublisher.sendMsg(new EventInformation(TopicConstants.SHUTDOWNREQUEST, "now"));
+        message.addReaction(ClassHelpers.THINKING_EMOTE).queue();
+        this.msgID = message.getId();
     }
 
     @Override
     public void recvMsg(EventInformation event) {
-        String status = event.value;
-        Color stat = Color.GRAY;
-        if(status.equals("ERROR")) {
-            stat = Color.RED;
-        } else if(status.equals("SUCCESS")) {
-            stat = Color.GREEN;
+        if(!event.channel.equals(TopicConstants.SHUTDOWNRESPONSE)) return;
+        if (!msgID.isEmpty())
+        {
+            String reaction = event.value.equals("SUCCESS") ? ClassHelpers.CHECKMARK_EMOTE : ClassHelpers.CROSSMARK_EMOTE;
+            Objects.requireNonNull(Objects.requireNonNull(
+                                    jda.getGuildById(ClassHelpers.getProperty("guildid")))
+                            .getTextChannelById(ClassHelpers.getProperty("minecraftchannel")))
+                    .retrieveMessageById(msgID).queue(m -> {
+                        m.clearReactions().queue(r -> {
+                            m.addReaction(reaction).queue();
+                        });
+
+                        this.msgID = "";
+                    });
+        } else {
+            Objects.requireNonNull(Objects.requireNonNull(
+                                    jda.getGuildById(ClassHelpers.getProperty("guildid")))
+                            .getTextChannelById(ClassHelpers.getProperty("minecraftchannel")))
+                    .sendMessage(new EmbedBuilder()
+                            .setTitle("Server Shutdown")
+                            .setColor(Color.GREEN)
+                            .build())
+                    .queue();
         }
-
-        Objects.requireNonNull(Objects.requireNonNull(
-                jda.getGuildById(ClassHelpers.getProperty("guildid")))
-                        .getTextChannelById(ClassHelpers.getProperty("minecraftchannel")))
-                .sendMessage(new EmbedBuilder()
-                    .setTitle("Shutdown Request")
-                    .setAuthor(author)
-                    .setColor(stat)
-                    .setDescription("Server Status: " + (status.equals("SUCCESS") ? "OFFLINE" : "ERROR"))
-                    .build())
-                .queue();
-
     }
 }

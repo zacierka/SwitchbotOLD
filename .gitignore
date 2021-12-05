@@ -1,3 +1,5 @@
 target
 .idea
 config.properties
+out
+META-INF

@@ -4,9 +4,7 @@ import com.github.stackovernorth.jda.commandhandler.listener.CommandListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
-
 import utility.ClassHelpers;
 import utility.DatabaseHelper;
 

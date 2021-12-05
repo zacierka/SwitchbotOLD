@@ -1,12 +1,12 @@
 package utility;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class DatabaseHelper {
 
@@ -48,7 +48,7 @@ public final class DatabaseHelper {
             // loop through the result set
             return rs;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            databaseLogger.warn(ex.getMessage());
         }
         return null;
     }
@@ -61,7 +61,7 @@ public final class DatabaseHelper {
             try {
                 version = rs.getString("version");
             } catch (SQLException e) {
-                e.printStackTrace();
+                databaseLogger.warn(e.getMessage());
             }
         }
         rs.close();
@@ -77,7 +77,7 @@ public final class DatabaseHelper {
                 try {
                     players.add(rs.getString("playername"));;
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    databaseLogger.warn(e.getMessage());
                 }
             }
         }
@@ -97,7 +97,7 @@ public final class DatabaseHelper {
                 try {
                     scoreboard.put(rs.getString("user"), rs.getInt("score"));
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    databaseLogger.warn(e.getMessage());
                 }
             }
         }

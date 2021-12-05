@@ -30,15 +30,16 @@ public class RestartCommand extends EventListener implements CommandListener {
     @Override
     public void onCommand(Member member, TextChannel textChannel, Message message, String[] strings) {
         eventPublisher.sendMsg(new EventInformation(TopicConstants.RESTARTREQUEST, "request"));
-        message.addReaction("U+1F4AD").queue();
+        message.addReaction(ClassHelpers.THINKING_EMOTE).queue();
         this.msgID = message.getId();
     }
 
     @Override
     public void recvMsg(EventInformation event) {
+        if(!event.channel.equals(TopicConstants.RESTARTRESPONSE)) return;
         if (!msgID.isEmpty())
         {
-            String reaction = event.value.equals("SUCCESS") ? "U+2705" : "U+274C";
+            String reaction = event.value.equals("SUCCESS") ? ClassHelpers.CHECKMARK_EMOTE : ClassHelpers.CROSSMARK_EMOTE;
             Objects.requireNonNull(Objects.requireNonNull(
                             jda.getGuildById(ClassHelpers.getProperty("guildid")))
                     .getTextChannelById(ClassHelpers.getProperty("minecraftchannel")))
